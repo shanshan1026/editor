@@ -80,6 +80,7 @@ let g:syntastic_cpp_checkers=['']
 set nocompatible               " be iMproved
 filetype off                   " required
 
+" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
  
