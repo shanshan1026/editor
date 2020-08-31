@@ -1,26 +1,32 @@
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
+ '(column-number-mode t)
  '(display-time-mode t)
+ '(org-agenda-files nil)
+ '(package-selected-packages (quote (smex markdown-mode+)))
  '(text-mode-hook (quote (text-mode-hook-identify))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Cambria" :foundry "outline" :slant normal :weight normal :height 120 :width normal)))))
+ '(default ((t (:family "Courier New" :foundry "outline" :slant normal :weight bold :height 160 :width normal)))))
 
 ;;customise emacs for own use
 (setq-default truncate-lines t)
 (setq org-startup-truncated nil)
 (desktop-save-mode 1)
 (setq desktop-restore-eager 50)
-(set-default-font "-apple-Consolas-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+;;(set-default-font "-apple-Consolas-medium-normal-normal-*-35-*-*-*-m-0-iso10646-1")
+(set-default-font "-outline-Courier New-bold-normal-normal-mono-35-*-*-*-c-*-iso8859-1")
 (setq column-number-mode t)
 (setq line-number-mode t)
+(setq global-visual-line-mode t)
 (setq default-frame-alist '((width . 100)(height . 30)))
 
 (setq indent-tabs-mode nil)
@@ -29,26 +35,29 @@
 (setq buffer-file-coding-system 'utf-8)
 
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize) ;; You might already have this line
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (when no-ssl
+    (warn "\
+Your version of Emacs does not support SSL connections,
+which is unsafe because it allows man-in-the-middle attacks.
+There are two things you can do about this warning:
+1. Install an Emacs version that does support SSL and be safe.
+2. Remove this warning from your init file so you won't see it again."))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
 ;;package install 
-;;expand-region smex w3m switch-window
-(require 'color-theme)
-(color-theme-initialize)
-;;(color-theme-classic)
-;;(color-theme-jsc-dark)
-;;(color-theme-clarity)
-;;(color-theme-comidia)
-(color-theme-dark-blue)
 ;;(load-file  "~/.emacs.d/site-lisp/sr-speedbar.el")
 ;;(require 'sr-speedbar)
-(global-set-key [(f4)] 'sr-speedbar-toggle)
-(setq speedbar-show-unknown-files t)
-(setq sr-speedbar-right-side nil)
+;;(global-set-key [(f4)] 'sr-speedbar-toggle)
+;;(setq speedbar-show-unknown-files t)
+;;(setq sr-speedbar-right-side nil)
 
 ;;(add-to-list 'load-path "~/.emacs.d/site-lisp/cedet-1.0pre6/common")
 ;;(add-to-list 'load-path "~/.emacs.d/site-lisp/cedet-1.0pre6/semantic")
@@ -59,7 +68,7 @@
 ;;not show start up image
 (setq inhibit-startup-message t)
 
-(setq default-directory "C:/Users/apeng1/")
+(setq default-directory "C:/Users/arthurp")
 
 ;;ispell setup
 (setq-default ispell-program-name "aspell")
@@ -80,13 +89,9 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
-(setq org-agenda-files (list "C:/Seafile/work/personal/personal.org" "C:/Seafile/work/cloverleaf/plan/cloverleaf.org"))
+(setq org-agenda-files (list "C:/work/personal.org" "C:/work/source/git/task/task.org"))
 
 ;;calendar setting
-(setq holiday-hebrew-holidays nil  
-      holiday-islamic-holidays nil  
-      holiday-bahai-holidays nil  
-      )
 (setq holiday-local-holidays '((holiday-fixed 1 1   "元旦")  
                         (holiday-fixed 5 1   "劳动节")  
                         (holiday-fixed 10 1  "国庆节")  
@@ -118,6 +123,8 @@
 (setq appt-display-interval 5)
 
 ;;smex
+(require 'smex)
+(smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
@@ -126,38 +133,3 @@
 ;;switch-window
 (global-set-key (kbd "C-x o") 'switch-window)
 
-;;org-redmine setting
-;; Target Redmine URI
-;;   eg. Redmine Project
-(setq org-redmine-uri "http://10.86.52.72/redmine/")
-;;   eg. Ruby Project
-;;(setq org-redmine-uri "http://redmine.ruby-lang.org")
-
-(setq org-redmine-auth-api-key "7ea1a392c07bd7f27fc72c7e89174122ee90c102") ;; nil default
-
-;; default template
-;; (defvar org-redmine-template-header "#%i% %s% :%t_n%:")
-;; (defvar org-redmine-template-property nil)
-
-;; * [#333] Subject :Tag:
-
-(setq org-redmine-template-header "[%p_n%] #%i% %s% by %as_n%")
-(setq org-redmine-template-property
-      '(("assigned_to" . "%as_n%")
-        ("version" . "%v_n%")))
-
-;; * [ProjectName] #333 Subject by gongo
-;;   :PROPERTIES:
-;;   :assigned_to:  dududu
-;;   :version: 1.2
-;;   :END:
-
-(setq org-redmine-template-header "[#%i%] %s%")
-(setq org-redmine-template-property
-      '(("project_name" . "%as_n%")))
-
-;; * [#333] Subject
-;;   :PROPERTIES:
-;;   :project_name:  ProjectName
-;;   :END:
-;;org-redmine setting end
