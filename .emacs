@@ -7,8 +7,9 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(display-time-mode t)
- '(org-agenda-files nil)
- '(package-selected-packages (quote (smex markdown-mode+)))
+ '(markdown-command "pandoc")
+ '(org-agenda-files nil t)
+ '(package-selected-packages (quote (auctex helm flycheck smex markdown-mode+)))
  '(text-mode-hook (quote (text-mode-hook-identify))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -59,12 +60,6 @@ There are two things you can do about this warning:
 ;;(setq speedbar-show-unknown-files t)
 ;;(setq sr-speedbar-right-side nil)
 
-;;(add-to-list 'load-path "~/.emacs.d/site-lisp/cedet-1.0pre6/common")
-;;(add-to-list 'load-path "~/.emacs.d/site-lisp/cedet-1.0pre6/semantic")
-;;(require 'cedet)
-;;(add-to-list 'load-path "~/.emacs.d/site-lisp/ecb-2.40")
-;;(require 'ecb)
-
 ;;not show start up image
 (setq inhibit-startup-message t)
 
@@ -91,6 +86,30 @@ There are two things you can do about this warning:
 
 (setq org-agenda-files (list "C:/work/personal.org" "C:/work/source/git/task/task.org"))
 
+(setq diary-file "C:/Seafile/work/personal/diary")
+
+;;auctex setup
+(load "auctex.el" nil t t)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+
+;;apointment setting
+(appt-activate 1)
+(setq appt-message-warning-time 15)
+(setq appt-display-interval 5)
+
+;;smex
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;;switch-window
+(global-set-key (kbd "C-x o") 'switch-window)
+
 ;;calendar setting
 (setq holiday-local-holidays '((holiday-fixed 1 1   "元旦")  
                         (holiday-fixed 5 1   "劳动节")  
@@ -114,22 +133,4 @@ There are two things you can do about this warning:
 (setq calendar-latitude +31)  
 (setq calendar-longitude +120)  
 (setq calendar-location-name "Shanghai") 
-
-(setq diary-file "C:/Seafile/work/personal/diary")
-
-;;apointment setting
-(appt-activate 1)
-(setq appt-message-warning-time 15)
-(setq appt-display-interval 5)
-
-;;smex
-(require 'smex)
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-;;switch-window
-(global-set-key (kbd "C-x o") 'switch-window)
 
