@@ -30,8 +30,8 @@ set laststatus=2
 " avoid Esc
 :imap ;e <Esc>
 " exchange ; and :
-noremap ; :
-noremap : ;
+" noremap ; :
+" noremap : ;
 " fast load winmanager
 noremap <silent> <leader>w :WManager<cr>
 " fast reloading of the .vimrc
